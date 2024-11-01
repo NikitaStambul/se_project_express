@@ -23,14 +23,14 @@ const getUserById = (req, res) => {
     })
     .catch((error) => {
       if (error.name === "DocumentNotFoundError") {
-        return res
-          .status(statusCodes.BAD_REQUEST)
+        res.status(statusCodes.NOT_FOUND).send({ message: error.message });
+      } else if (error.name === "CastError") {
+        res.status(statusCodes.BAD_REQUEST).send({ message: error.message });
+      } else {
+        res
+          .status(statusCodes.INTERNAL_SERVER_ERROR)
           .send({ message: error.message });
       }
-
-      return res
-        .status(statusCodes.INTERNAL_SERVER_ERROR)
-        .send({ message: error.message });
     });
 };
 
@@ -43,13 +43,12 @@ const createUser = (req, res) => {
     })
     .catch((error) => {
       if (error.name === "ValidationError") {
-        return res
-          .status(statusCodes.BAD_REQUEST)
+        res.status(statusCodes.BAD_REQUEST).send({ message: error.message });
+      } else {
+        res
+          .status(statusCodes.INTERNAL_SERVER_ERROR)
           .send({ message: error.message });
       }
-      return res
-        .status(statusCodes.INTERNAL_SERVER_ERROR)
-        .send({ message: error.message });
     });
 };
 
