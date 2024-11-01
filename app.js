@@ -2,7 +2,6 @@ const express = require("express");
 const mongoose = require("mongoose");
 const router = require("./routes");
 const { statusCodes } = require("./utils/constants");
-const authorization = require("./middlewares/authorization");
 
 const app = express();
 const { PORT = 3001 } = process.env;
@@ -13,7 +12,12 @@ mongoose
   .catch(console.error);
 
 app.use(express.json());
-app.use(authorization);
+app.use((req, _res, next) => {
+  req.user = {
+    _id: "6723007fa426fab4f7398f75",
+  };
+  next();
+});
 app.use(router);
 app.use((_req, res) => {
   res
