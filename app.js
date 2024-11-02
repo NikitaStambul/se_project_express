@@ -4,10 +4,11 @@ const router = require("./routes");
 const { statusCodes } = require("./utils/constants");
 
 const app = express();
-const { PORT = 3001 } = process.env;
+const { PORT = 3001, DATABASE_URL = "mongodb://127.0.0.1:27017/wtwr_db" } =
+  process.env;
 
 mongoose
-  .connect("mongodb://127.0.0.1:27017/wtwr_db")
+  .connect(DATABASE_URL)
   .then(() => console.log("Connected to the DB"))
   .catch(console.error);
 
