@@ -5,12 +5,12 @@ const getItems = (_req, res) => {
   Item.find({})
     .populate("owner")
     .then((items) => {
-      res.status(statusCodes.OK).send(items);
+      res.send(items);
     })
     .catch(() => {
       res
         .status(statusCodes.INTERNAL_SERVER_ERROR)
-        .send({ message: "Error retrieving items" });
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -20,7 +20,7 @@ const getItemById = (req, res) => {
   Item.findById(itemId)
     .orFail()
     .then((item) => {
-      res.status(statusCodes.OK).send(item);
+      res.send(item);
     })
     .catch((error) => {
       if (error.name === "DocumentNotFoundError") {
@@ -28,10 +28,10 @@ const getItemById = (req, res) => {
       } else if (error.name === "CastError") {
         res.status(statusCodes.BAD_REQUEST).send({ message: error.message });
       } else {
-        res.status(statusCodes.OK).send({ message: error.message });
+        res
+          .status(statusCodes.INTERNAL_SERVER_ERROR)
+          .send({ message: "An error has occurred on the server" });
       }
-
-      res.status(statusCodes.OK).send({ message: error.message });
     });
 };
 
@@ -49,7 +49,7 @@ const createItem = (req, res) => {
       } else {
         res
           .status(statusCodes.INTERNAL_SERVER_ERROR)
-          .send({ message: error.message });
+          .send({ message: "An error has occurred on the server" });
       }
     });
 };
@@ -60,16 +60,20 @@ const deleteItem = (req, res) => {
   Item.findByIdAndDelete(itemId)
     .then((item) => {
       if (!item) {
-        res.status(404).send({ message: "Item not found" });
+        res.status(statusCodes.NOT_FOUND).send({ message: "Item not found" });
       } else {
-        res.status(200).send({ message: "Item deleted", item });
+        res.send({ message: "Item deleted", item });
       }
     })
     .catch((error) => {
       if (error.name === "CastError") {
-        res.status(400).send({ message: "Invalid item ID" });
+        res
+          .status(statusCodes.BAD_REQUEST)
+          .send({ message: "Invalid item ID" });
       } else {
-        res.status(500).send({ message: "Error deleting item" });
+        res
+          .status(statusCodes.INTERNAL_SERVER_ERROR)
+          .send({ message: "An error has occurred on the server" });
       }
     });
 };
@@ -84,7 +88,7 @@ const likeItem = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then(() => res.status(statusCodes.OK).send({ message: "liked" }))
+    .then(() => res.send({ message: "liked" }))
     .catch((error) => {
       if (error.name === "DocumentNotFoundError") {
         res.status(statusCodes.NOT_FOUND).send({ message: error.message });
@@ -93,7 +97,7 @@ const likeItem = (req, res) => {
       } else {
         res
           .status(statusCodes.INTERNAL_SERVER_ERROR)
-          .send({ message: error.message });
+          .send({ message: "An error has occurred on the server" });
       }
     });
 };
@@ -104,7 +108,7 @@ const unlikeItem = (req, res) => {
 
   Item.findByIdAndUpdate(itemId, { $pull: { likes: user._id } }, { new: true })
     .orFail()
-    .then(() => res.status(statusCodes.OK).send({ message: "unliked" }))
+    .then(() => res.send({ message: "unliked" }))
     .catch((error) => {
       if (error.name === "DocumentNotFoundError") {
         res.status(statusCodes.NOT_FOUND).send({ message: error.message });
@@ -113,7 +117,7 @@ const unlikeItem = (req, res) => {
       } else {
         res
           .status(statusCodes.INTERNAL_SERVER_ERROR)
-          .send({ message: error.message });
+          .send({ message: "An error has occurred on the server" });
       }
     });
 };

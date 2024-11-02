@@ -4,12 +4,12 @@ const User = require("../models/user");
 const getUsers = (_req, res) => {
   User.find({})
     .then((users) => {
-      res.status(statusCodes.OK).send(users);
+      res.send(users);
     })
     .catch(() => {
       res
         .status(statusCodes.INTERNAL_SERVER_ERROR)
-        .send({ message: "Error retrieving users" });
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -19,7 +19,7 @@ const getUserById = (req, res) => {
   User.findById(userId)
     .orFail()
     .then((user) => {
-      res.status(statusCodes.OK).send(user);
+      res.send(user);
     })
     .catch((error) => {
       if (error.name === "DocumentNotFoundError") {
@@ -29,7 +29,7 @@ const getUserById = (req, res) => {
       } else {
         res
           .status(statusCodes.INTERNAL_SERVER_ERROR)
-          .send({ message: error.message });
+          .send({ message: "An error has occurred on the server" });
       }
     });
 };
@@ -47,7 +47,7 @@ const createUser = (req, res) => {
       } else {
         res
           .status(statusCodes.INTERNAL_SERVER_ERROR)
-          .send({ message: error.message });
+          .send({ message: "An error has occurred on the server" });
       }
     });
 };
