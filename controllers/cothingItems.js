@@ -66,9 +66,15 @@ const deleteItem = (req, res) => {
           .status(statusCodes.FORBIDDEN)
           .send({ message: "You do not have permission to delete this item" });
       } else {
-        Item.findByIdAndDelete(itemId).then(() => {
-          res.send({ message: "Item deleted", item });
-        });
+        Item.findByIdAndDelete(itemId)
+          .then(() => {
+            res.send({ message: "Item deleted", item });
+          })
+          .catch(() => {
+            res
+              .status(statusCodes.INTERNAL_SERVER_ERROR)
+              .send({ message: "An error has occurred on the server" });
+          });
       }
     })
     .catch((error) => {

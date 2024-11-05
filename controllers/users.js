@@ -81,6 +81,14 @@ const updateUserInfo = (req, res) => {
 const login = (req, res) => {
   const { email, password } = req.body;
 
+  if (!email || !password) {
+    res
+      .status(statusCodes.BAD_REQUEST)
+      .send({ message: "Email or password are not provided" });
+
+    return;
+  }
+
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
@@ -91,11 +99,11 @@ const login = (req, res) => {
     })
     .catch((error) => {
       if (error.name === "CredentialsError") {
-        res.status(statusCodes.BAD_REQUEST).send({ message: error.message });
+        res.status(statusCodes.UNAUTHORIZED).send({ message: error.message });
       } else {
         res
           .status(statusCodes.INTERNAL_SERVER_ERROR)
-          .send({ message: error.message });
+          .send({ message: "An error has occurred on the server" });
       }
     });
 };

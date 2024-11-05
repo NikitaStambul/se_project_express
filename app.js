@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const router = require("./routes");
-const { statusCodes } = require("./utils/constants");
 
 require("dotenv").config();
 
@@ -21,11 +20,6 @@ mongoose
 app.use(cors());
 app.use(express.json());
 app.use(router);
-app.use((_req, res) => {
-  res
-    .status(statusCodes.NOT_FOUND)
-    .json({ message: "Requested resource not found" });
-});
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
