@@ -90,7 +90,7 @@ const login = (req, res) => {
       res.send({ token });
     })
     .catch((error) => {
-      if (error.name === "AuthError") {
+      if (error.name === "CredentialsError") {
         res.status(statusCodes.BAD_REQUEST).send({ message: error.message });
       } else {
         res
