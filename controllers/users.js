@@ -91,7 +91,7 @@ const login = (req, res) => {
     })
     .catch((error) => {
       if (error.name === "AuthError") {
-        res.status(statusCodes.UNAUTHORIZED).send({ message: error.message });
+        res.status(statusCodes.BAD_REQUEST).send({ message: error.message });
       } else {
         res
           .status(statusCodes.INTERNAL_SERVER_ERROR)
