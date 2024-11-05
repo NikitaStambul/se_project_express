@@ -57,12 +57,18 @@ const createItem = (req, res) => {
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
 
-  Item.findByIdAndDelete(itemId)
+  Item.findById(itemId)
     .then((item) => {
       if (!item) {
         res.status(statusCodes.NOT_FOUND).send({ message: "Item not found" });
+      } else if (item.owner.toString() !== req.user._id.toString()) {
+        res
+          .status(statusCodes.FORBIDDEN)
+          .send({ message: "You do not have permission to delete this item" });
       } else {
-        res.send({ message: "Item deleted", item });
+        Item.findByIdAndDelete(itemId).then(() => {
+          res.send({ message: "Item deleted", item });
+        });
       }
     })
     .catch((error) => {

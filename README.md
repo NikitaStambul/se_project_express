@@ -19,26 +19,31 @@ This back-end API is designed to:
 - Manage user profiles with features like creating and fetching user data.
 - Handle clothing item data, including adding, retrieving, deleting, and liking/unliking items.
 - Provide error handling with appropriate HTTP status codes to ensure a smooth user experience.
+- Routes protected by authorization.
 
 ## Features
 
 ### User Routes
 
-- **Get All Users**: Retrieves a list of all users in the database.
-- **Get User by ID**: Fetches user data based on a provided `userId`.
-- **Create User**: Creates a new user with fields `name` and `avatar` (which must be a valid URL).
+- **Get My Info**: Retrieves authorized user info.
+- **Change My Info**: Changes authorized user `name` and `avatar` fields.
 
 ### Item Routes
 
 - **Get All Items**: Retrieves all clothing items, each populated with the owner’s information.
 - **Get Item by ID**: Fetches an item by its `itemId`, with error handling for missing or invalid IDs.
 - **Create Item**: Adds a new clothing item with details such as `name`, `weather` (categorized as "hot," "warm," or "cold"), and `imageUrl` (must be a valid URL).
-- **Delete Item**: Removes a clothing item based on its `itemId`.
+- **Delete Item**: Removes a clothing item based on its `itemId` and requires authorized user to be the owner of the item.
 - **Like/Unlike Item**: Allows users to like or unlike items, updating the list of users who have liked the item.
+
+### Signin and Signup Routes
+
+- **Signin**: Logs in user with `email` and `password` and responds with json web token.
+- **Signup**: Creates new user with `name`, `avatar`, `email` and `password`.
 
 ### Data Models
 
-- **User Model**: Defines a schema with `name` and `avatar` fields, where `avatar` requires a valid URL format.
+- **User Model**: Defines a schema with `name`, `avatar`, `email` and `password` fields, where `avatar` requires a valid URL format, email is unique and password stored in hashed value.
 - **Clothing Item Model**: Contains properties for `name`, `weather`, `imageUrl`, `owner`, `likes`, and `createdAt`. Validation rules ensure appropriate field lengths, valid URLs, and user tracking in the `likes` array.
 
 ## Technologies Used
@@ -79,9 +84,3 @@ To run this project locally:
 
 This project uses [Nodemon](https://nodemon.io/) for auto-reloading during development, allowing the server to restart automatically whenever file changes are detected.
 
-## Testing
-
-For sprint-based development, ensure that the current sprint number is documented:
-
-1. Open the `sprint.txt` file located in the root folder.
-2. Edit the file to reflect the number of the sprint you're working on, e.g., `12`.
