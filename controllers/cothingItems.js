@@ -3,7 +3,6 @@ const Item = require("../models/cothingItem");
 
 const getItems = (_req, res) => {
   Item.find({})
-    .populate("owner")
     .then((items) => {
       res.send(items);
     })
@@ -39,7 +38,7 @@ const createItem = (req, res) => {
   const { name, weather, imageUrl } = req.body;
   const { user } = req;
 
-  Item.create({ name, weather, imageUrl, owner: user._id })
+  Item.create({ name, weather, imageUrl, owner: { _id: user._id } })
     .then((item) => {
       res.status(statusCodes.CREATED).send(item);
     })
