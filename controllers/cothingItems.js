@@ -17,18 +17,18 @@ const getItems = (_req, res, next) => {
 };
 
 const getItemById = (req, res, next) => {
-  const { itemId } = req.params;
+  const { id } = req.params;
 
-  Item.findById(itemId)
+  Item.findById(id)
     .orFail()
     .then((item) => {
       res.send(item);
     })
     .catch((error) => {
       if (error.name === "DocumentNotFoundError") {
-        next(new NotFoundError(`Item with id: ${itemId} not found`));
+        next(new NotFoundError(`Item with id: ${id} not found`));
       } else if (error.name === "CastError") {
-        next(new BadRequestError("Wrong itemId format"));
+        next(new BadRequestError("Wrong item id format"));
       } else {
         next(error);
       }
@@ -53,18 +53,18 @@ const createItem = (req, res, next) => {
 };
 
 const deleteItem = (req, res, next) => {
-  const { itemId } = req.params;
+  const { id } = req.params;
 
-  Item.findById(itemId)
+  Item.findById(id)
     .then((item) => {
       if (!item) {
-        next(new NotFoundError(`Item with id: ${itemId} not found`));
+        next(new NotFoundError(`Item with id: ${id} not found`));
       } else if (item.owner.toString() !== req.user._id.toString()) {
         next(
           new ForbiddenError("You do not have permission to delete this item")
         );
       } else {
-        Item.findByIdAndDelete(itemId)
+        Item.findByIdAndDelete(id)
           .then(() => {
             res.send({ message: "Item deleted", item });
           })
@@ -75,7 +75,7 @@ const deleteItem = (req, res, next) => {
     })
     .catch((error) => {
       if (error.name === "CastError") {
-        next(new BadRequestError("Wrong itemId format"));
+        next(new BadRequestError("Wrong item id format"));
       } else {
         next(error);
       }
@@ -83,11 +83,11 @@ const deleteItem = (req, res, next) => {
 };
 
 const likeItem = (req, res, next) => {
-  const { itemId } = req.params;
+  const { id } = req.params;
   const { user } = req;
 
   Item.findByIdAndUpdate(
-    itemId,
+    id,
     { $addToSet: { likes: user._id } },
     { new: true }
   )
@@ -95,9 +95,9 @@ const likeItem = (req, res, next) => {
     .then(() => res.send({ message: "liked" }))
     .catch((error) => {
       if (error.name === "DocumentNotFoundError") {
-        next(new NotFoundError(`Item with id: ${itemId} not found`));
+        next(new NotFoundError(`Item with id: ${id} not found`));
       } else if (error.name === "CastError") {
-        next(new BadRequestError("Wrong itemId format"));
+        next(new BadRequestError("Wrong item id format"));
       } else {
         next(error);
       }
@@ -105,17 +105,17 @@ const likeItem = (req, res, next) => {
 };
 
 const unlikeItem = (req, res, next) => {
-  const { itemId } = req.params;
+  const { id } = req.params;
   const { user } = req;
 
-  Item.findByIdAndUpdate(itemId, { $pull: { likes: user._id } }, { new: true })
+  Item.findByIdAndUpdate(id, { $pull: { likes: user._id } }, { new: true })
     .orFail()
     .then(() => res.send({ message: "unliked" }))
     .catch((error) => {
       if (error.name === "DocumentNotFoundError") {
-        next(new NotFoundError(`Item with id: ${itemId} not found`));
+        next(new NotFoundError(`Item with id: ${id} not found`));
       } else if (error.name === "CastError") {
-        next(new BadRequestError("Wrong itemId format"));
+        next(new BadRequestError("Wrong item id format"));
       } else {
         next(error);
       }
