@@ -3,6 +3,7 @@ const cors = require("cors");
 const mongoose = require("mongoose");
 const helmet = require("helmet");
 const router = require("./routes");
+const errorHandler = require("./middlewares/error-handler");
 
 require("dotenv").config();
 
@@ -22,6 +23,7 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(router);
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://${HOST}:${PORT}`);
