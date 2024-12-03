@@ -1,5 +1,7 @@
 # WTWR (What to Wear?): Back-End
 
+[DEPLOYED PROJECT](https://wtwr.base.crabdance.com/)
+
 The back-end project for the **WTWR (What to Wear?)** application serves as the server-side logic and data management for user profiles and clothing item interactions. This API enables core operations like creating, reading, updating, and deleting users and items, as well as handling user interactions with items such as liking or unliking them.
 
 ## Table of Contents
