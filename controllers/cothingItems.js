@@ -1,19 +1,15 @@
 const { statusCodes } = require("../utils/constants");
 const Item = require("../models/cothingItem");
-const {
-  NotFoundError,
-  BadRequestError,
-  ForbiddenError,
-} = require("../utils/errors");
+const NotFoundError = require("../utils/errors/notFoundError")
+const BadRequestError = require("../utils/errors/badRequestError")
+const ForbiddenError = require("../utils/errors/forbiddenError")
 
 const getItems = (_req, res, next) => {
   Item.find({})
     .then((items) => {
       res.send(items);
     })
-    .catch((error) => {
-      next(error);
-    });
+    .catch(next);
 };
 
 const getItemById = (req, res, next) => {
